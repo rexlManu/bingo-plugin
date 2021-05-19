@@ -1,0 +1,4 @@
+name: Bingo
+version: ${project.version}
+main: de.rexlmanu.bingo.BingoPlugin
+api-version: 1.16
