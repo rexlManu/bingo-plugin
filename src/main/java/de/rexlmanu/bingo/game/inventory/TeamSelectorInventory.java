@@ -98,6 +98,7 @@ public class TeamSelectorInventory implements Listener, IntractableInventory {
                                         .color(Message.COLOR)));
                         event.getWhoClicked().playSound(Sound.sound(Key.key("entity.player.levelup"), Sound.Source.PLAYER, 1, 2));
                         this.gameManager.scoreboard().update(gameUser);
+                        this.gameManager.tablistHandler().update();
                     }));
         }
 

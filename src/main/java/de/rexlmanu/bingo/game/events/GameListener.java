@@ -53,6 +53,10 @@ public class GameListener implements Listener {
         if (this.gameManager.state().isIngame()) {
             this.gameManager.findUserByUuid(player.getUniqueId()).ifPresentOrElse(user -> {
                 event.joinMessage(Message.PREFIX.append(Component.text(player.getName() + " hat das Spiel betreten.").color(Message.COLOR)));
+                this.gameManager.updateTabFooter();
+                this.gameManager.scoreboard().create(user);
+                this.gameManager.tablistHandler().update();
+                this.gameManager.updateBossbar(user);
             }, () -> {
                 event.joinMessage(null);
                 player.teleport(Bukkit.getWorld(GameManager.WORLD_NAME).getSpawnLocation());

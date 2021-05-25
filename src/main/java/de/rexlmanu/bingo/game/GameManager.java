@@ -285,7 +285,7 @@ public class GameManager implements Reloadable {
     public void updateBossbar(GameUser user) {
         float progress = (float) (((double) user.selectedTeam().items().size()) / ((double) this.flagManager().flags().size()));
         user.bossBar().progress(progress);
-        user.bossBar().name(Component.text(String.format("%s von %s gesammelt (%.0f%%)",
+        user.bossBar().name(Component.text(String.format("%s von %s erfüllt (%.0f%%)",
                 user.selectedTeam().items().size(),
                 this.flagManager().flags().size(),
                 progress * 100
@@ -351,7 +351,7 @@ public class GameManager implements Reloadable {
         worldNames.forEach(s -> {
             World createdWorld = Bukkit.getWorld(s);
             createdWorld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-            createdWorld.setDifficulty(Difficulty.valueOf(this.gameSettings.difficulty().selected()));
+            createdWorld.setDifficulty(Difficulty.valueOf(this.gameSettings.difficulty().selected().toUpperCase()));
             createdWorld.setAutoSave(false);
             createdWorld.setFullTime(0);
         });
@@ -372,7 +372,7 @@ public class GameManager implements Reloadable {
             player.playSound(Sound.sound(Key.key("entity.firework_rocket.twinkle"), Sound.Source.PLAYER, 1, 1.1f));
             player.showTitle(Title.title(
                     Component.text(this.winner.name()),
-                    Component.text("hat alle Ziele gesammelt.").color(NamedTextColor.GRAY),
+                    Component.text("hat alle Ziele erfüllt.").color(NamedTextColor.GRAY),
                     Title.Times.of(Duration.ofSeconds(1), Duration.ofSeconds(5), Duration.ofSeconds(1))
             ));
             this.broadcast(Message.PREFIX.append(Component.text("Das Team " + this.winner.name() + " hat gewonnen!").color(NamedTextColor.GREEN)));
@@ -447,6 +447,9 @@ public class GameManager implements Reloadable {
         this.flagManager.flags().clear();
         this.starting = false;
         this.winner = null;
+        this.tablistHandler.update();
+        
+        this.getPlayingUsers().stream().filter(user -> user.asPlayer().isEmpty()).forEach(user -> this.getPlayingUsers().remove(user));
     }
 
     public void giveLobbyItems(Player player) {

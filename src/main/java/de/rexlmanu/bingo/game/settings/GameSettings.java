@@ -9,6 +9,7 @@ import de.rexlmanu.bingo.shared.settings.elements.IntegerSettingElement;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
 
@@ -62,8 +63,8 @@ public class GameSettings implements GameSettingProvider {
     private EnumSettingElement difficulty = SettingElement
             .builder()
             .material(Material.ROTTEN_FLESH)
-            .name("Schwerigkeit")
-            .asEnum("HARD", Arrays.stream(Difficulty.values()).map(Enum::name).collect(Collectors.toList()));
+            .name("Schwierigkeit")
+            .asEnum("Hard", Arrays.stream(Difficulty.values()).map(Enum::name).map(String::toLowerCase).map(StringUtils::capitalize).collect(Collectors.toList()));
 
     public GameSettings() {
         this.settings = Lists.newArrayList(teamSize,

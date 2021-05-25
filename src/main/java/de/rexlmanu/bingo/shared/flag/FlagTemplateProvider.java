@@ -25,14 +25,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Accessors(fluent = true)
 public class FlagTemplateProvider implements Reloadable {
 
-    private static final FlagTemplate ITEM_FLAG_TEMPLATE = new FlagTemplate("example", FlagType.ITEM,
+    private static final FlagTemplate ITEM_FLAG_TEMPLATE = new FlagTemplate("example-item", FlagType.ITEM,
             Collections.singletonList(new FlagItem(Material.DIRT)));
-    private static final FlagTemplate ADVANCEMENT__FLAG_TEMPLATE = new FlagTemplate("example", FlagType.ADVANCEMENT,
+    private static final FlagTemplate ADVANCEMENT__FLAG_TEMPLATE = new FlagTemplate("example-advancement", FlagType.ADVANCEMENT,
             Collections.singletonList(new FlagAdvancement("story/root")));
 
     private static final JsonParser PARSER = new JsonParser();
@@ -74,7 +75,7 @@ public class FlagTemplateProvider implements Reloadable {
                 Path directory = this.templateDirectory.resolve(type.directory());
                 if (!Files.isDirectory(directory)) {
                     Files.createDirectory(directory);
-                    Files.write(directory.resolve("example.json"),
+                    Files.write(directory.resolve("example-" + type.name().toLowerCase() + ".json"),
                             GSON.toJson(type.equals(FlagType.ITEM) ? ITEM_FLAG_TEMPLATE : ADVANCEMENT__FLAG_TEMPLATE).getBytes(),
                             StandardOpenOption.CREATE_NEW);
                 }
@@ -84,6 +85,20 @@ public class FlagTemplateProvider implements Reloadable {
         });
 
         this.reload();
+    }
+
+    public void saveTemplate(FlagTemplate flagTemplate) {
+        try {
+            Path filePath = this.templateDirectory.resolve(flagTemplate.type().directory()).resolve(flagTemplate.fileName());
+            Files.deleteIfExists(filePath);
+            Files.write(filePath,
+                    GSON.toJson(flagTemplate).getBytes(),
+                    StandardOpenOption.CREATE_NEW);
+
+            this.loadedTemplates.add(flagTemplate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,7 +112,9 @@ public class FlagTemplateProvider implements Reloadable {
                         .forEach(path -> {
                             try {
                                 String content = new String(Files.readAllBytes(path));
-                                this.loadedTemplates.add(GSON.fromJson(content, FLAG_TEMPLATE_TYPE_TOKEN));
+                                FlagTemplate template = GSON.fromJson(content, FLAG_TEMPLATE_TYPE_TOKEN);
+                                template.fileName(path.getFileName().toString());
+                                this.loadedTemplates.add(template);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -110,5 +127,9 @@ public class FlagTemplateProvider implements Reloadable {
 
     public List<FlagTemplate> getTemplates(FlagType type) {
         return this.loadedTemplates.stream().filter(flagTemplate -> flagTemplate.type().equals(type)).collect(Collectors.toList());
+    }
+
+    public Optional<FlagTemplate> findByName(String name) {
+        return this.loadedTemplates.stream().filter(template -> template.name().equals(name)).findFirst();
     }
 }

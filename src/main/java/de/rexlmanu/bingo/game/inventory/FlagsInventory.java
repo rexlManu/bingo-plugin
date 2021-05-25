@@ -79,7 +79,7 @@ public class FlagsInventory implements Listener, IntractableInventory {
                 ItemStackBuilder builder = Item.builder(material).displayName(flag.name().color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
                 collectedFlagItems.stream().filter(collectedFlagItem -> collectedFlagItem.flag().equals(flag)).findFirst().ifPresent(collectedFlagItem -> {
                     ArrayList<String> lore = Lists.newArrayList("");
-                    lore.add("§7§oGesammelt von " + collectedFlagItem.collector().asPlayer().get().getName());
+                    lore.add("§7§oErfüllt von " + collectedFlagItem.collector().asPlayer().get().getName());
                     lore.add("§7§oZeitpunkt: " + LegacyComponentSerializer
                             .legacySection()
                             .serialize(TimerFormatUtils.formatMillis(

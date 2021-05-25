@@ -13,9 +13,17 @@ import java.util.concurrent.ThreadLocalRandom;
 @AllArgsConstructor
 public class FlagTemplate {
 
+    private String fileName;
     private String name;
     private FlagType type;
     private List<Flag> flags;
+
+    public FlagTemplate(String name, FlagType type, List<Flag> flags) {
+        this.fileName = null;
+        this.name = name;
+        this.type = type;
+        this.flags = flags;
+    }
 
     public Flag random() {
         return this.flags.get(ThreadLocalRandom.current().nextInt(this.flags.size()));

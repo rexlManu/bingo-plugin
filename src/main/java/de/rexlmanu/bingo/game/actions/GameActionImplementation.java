@@ -52,9 +52,9 @@ public class GameActionImplementation implements GameActions {
             player.setGameMode(GameMode.ADVENTURE);
             this.gameManager.giveLobbyItems(player);
             this.gameManager.getPlayingUsers().forEach(user -> this.gameManager.scoreboard().update(user));
+            this.gameManager.tablistHandler().update();
+            this.gameManager.updateTabFooter();
         });
-
-        this.gameManager.tablistHandler().update();
     }
 
     @Override

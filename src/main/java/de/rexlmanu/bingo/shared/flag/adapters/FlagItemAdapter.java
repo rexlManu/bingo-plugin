@@ -16,7 +16,7 @@ public class FlagItemAdapter implements JsonSerializer<FlagItem>, JsonDeserializ
     @Override
     public JsonElement serialize(FlagItem src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject object = new JsonObject();
-        object.addProperty("type", "FlagAdvancement");
+        object.addProperty("type", "FlagItem");
         object.addProperty("material", src.material().name().toLowerCase());
         return object;
     }
