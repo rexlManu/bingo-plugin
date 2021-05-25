@@ -66,7 +66,7 @@ public class FlagsInventory implements Listener, IntractableInventory {
     public void open(Player player) {
         player.playSound(Sound.sound(Key.key("block.chest.open"), Sound.Source.PLAYER, 1, 2));
 
-        Inventory inventory = Bukkit.createInventory(null, 3 * 9, Component.text("Flags")
+        Inventory inventory = Bukkit.createInventory(null, 4 * 9, Component.text("Flags")
                 .style(Style.style().decoration(TextDecoration.ITALIC, false).build()));
 
         this.gameManager.findUserByUuid(player.getUniqueId()).ifPresent(user -> {

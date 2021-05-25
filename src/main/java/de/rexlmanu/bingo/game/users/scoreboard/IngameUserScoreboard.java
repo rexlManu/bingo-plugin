@@ -30,6 +30,8 @@ public class IngameUserScoreboard extends FastBoardUserScoreboard {
                 .flagManager()
                 .flags()
                 .stream()
+                .filter(flag -> !user.selectedTeam().hasCollected(flag))
+                .limit(10)
                 .map(flag -> Component
                         .text((user.selectedTeam().hasCollected(flag) ? "§8  - " : "§8  - "))
                         .append(flag.name().color(user.selectedTeam().hasCollected(flag) ? NamedTextColor.GREEN : NamedTextColor.GRAY)))
