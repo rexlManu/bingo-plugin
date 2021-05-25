@@ -239,12 +239,15 @@ public class GameManager implements Reloadable {
         }));
 
         boolean mixFlags = this.gameSettings.flagType().selected().equals("mix");
-        int rest = this.gameSettings.flagCount().value() % FlagType.values().length;
+
         Arrays.stream(FlagType.values()).forEach(type -> {
             if (!this.gameSettings.flagType().selected().equals(type.name().toLowerCase()) && !mixFlags) return;
 
             FlagTemplate template = this.getFlagTemplateBySetting(type);
             int flagCount = (mixFlags ? (this.gameSettings.flagCount().value() / 2) : this.gameSettings.flagCount().value());
+            if (flagCount < 1) {
+                flagCount = 1;
+            }
 
 
             if (flagCount > template.flags().size()) {
@@ -448,7 +451,7 @@ public class GameManager implements Reloadable {
         this.starting = false;
         this.winner = null;
         this.tablistHandler.update();
-        
+
         this.getPlayingUsers().stream().filter(user -> user.asPlayer().isEmpty()).forEach(user -> this.getPlayingUsers().remove(user));
     }
 
