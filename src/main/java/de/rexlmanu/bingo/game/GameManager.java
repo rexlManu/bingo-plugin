@@ -26,6 +26,7 @@ import de.rexlmanu.bingo.shared.scoreboard.UserScoreboard;
 import de.rexlmanu.bingo.shared.settings.SettingElement;
 import de.rexlmanu.bingo.shared.settings.elements.EnumSettingElement;
 import de.rexlmanu.bingo.utility.FileUtils;
+import de.rexlmanu.bingo.utility.StringHelper;
 import de.rexlmanu.bingo.utility.TimerFormatUtils;
 import de.rexlmanu.bingo.utility.interfaces.Reloadable;
 import de.rexlmanu.bingo.utility.progress.ProgressBar;
@@ -42,7 +43,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.HumanEntity;
@@ -54,6 +54,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import org.bukkit.util.StringUtil;
 
 @Getter
 @Accessors(fluent = true)
@@ -158,11 +159,11 @@ public class GameManager implements Reloadable {
             String teamName = DyeColor.values()[i].name().toLowerCase();
             if (teamName.contains("_")) {
                 String[] splitTeamName = teamName.split("_");
-                teamName = StringUtils.capitalize(splitTeamName[0]) +
+                teamName = StringHelper.capitalize(splitTeamName[0]) +
                         " " +
-                        StringUtils.capitalize(splitTeamName[1]);
+                    StringHelper.capitalize(splitTeamName[1]);
             } else {
-                teamName = StringUtils.capitalize(teamName);
+                teamName = StringHelper.capitalize(teamName);
             }
             this.teams.add(new Team(teamName, Material.valueOf(DyeColor.values()[i].name() + "_CONCRETE")));
         }
@@ -376,7 +377,7 @@ public class GameManager implements Reloadable {
             player.showTitle(Title.title(
                     Component.text(this.winner.name()),
                     Component.text("hat alle Ziele erfüllt.").color(NamedTextColor.GRAY),
-                    Title.Times.of(Duration.ofSeconds(1), Duration.ofSeconds(5), Duration.ofSeconds(1))
+                    Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(5), Duration.ofSeconds(1))
             ));
             this.broadcast(Message.PREFIX.append(Component.text("Das Team " + this.winner.name() + " hat gewonnen!").color(NamedTextColor.GREEN)));
             this.broadcast(Component.empty());
@@ -408,7 +409,7 @@ public class GameManager implements Reloadable {
     }
 
     public FlagTemplate getFlagTemplateBySetting(FlagType flagType) {
-        SettingElement element = this.gameSettings.byName(StringUtils.capitalize(flagType.name().toLowerCase()) + " Template");
+        SettingElement element = this.gameSettings.byName(StringHelper.capitalize(flagType.name().toLowerCase()) + " Template");
         if (Objects.isNull(element) || !(element instanceof EnumSettingElement)) return null;
         return this.flagTemplateProvider.getTemplates(flagType).stream().filter(flagTemplate ->
                 flagTemplate.name().equals(((EnumSettingElement) element).selected())).findFirst().orElse(null);
