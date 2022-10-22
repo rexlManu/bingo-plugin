@@ -1,6 +1,7 @@
 package de.rexlmanu.bingo.game;
 
 import com.google.common.collect.Lists;
+import de.rexlmanu.bingo.BingoPlugin;
 import de.rexlmanu.bingo.bootstrap.PluginImplementation;
 import de.rexlmanu.bingo.game.actions.GameActionImplementation;
 import de.rexlmanu.bingo.game.events.GameListener;
@@ -362,7 +363,9 @@ public class GameManager implements Reloadable {
 
         this.startedAt = System.currentTimeMillis();
 
-        this.getPlayingUsers().forEach(user -> user.asPlayer().ifPresent(player -> player.teleport(world.getSpawnLocation())));
+        this.implementation.runLater(() -> {
+            this.getPlayingUsers().forEach(user -> user.asPlayer().ifPresent(player -> player.teleport(world.getSpawnLocation())));
+        }, 20L);
     }
 
     public void end() {

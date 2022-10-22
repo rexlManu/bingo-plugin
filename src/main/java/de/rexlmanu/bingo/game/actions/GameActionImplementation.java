@@ -71,6 +71,7 @@ public class GameActionImplementation implements GameActions {
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         });
         action.user().fastBoard().ifPresent(FastBoard::delete);
+        action.user().fastBoard(null);
     }
 
     @Override
