@@ -198,7 +198,9 @@ public class GameListener implements Listener {
     @EventHandler
     public void handle(PlayerRespawnEvent event) {
         if (!this.gameManager.state().isIngame()) return;
-        event.setRespawnLocation(Bukkit.getWorld(GameManager.WORLD_NAME).getSpawnLocation());
+        if (!event.getRespawnLocation().getWorld().getName().equals(GameManager.WORLD_NAME)) {
+            event.setRespawnLocation(Bukkit.getWorld(GameManager.WORLD_NAME).getSpawnLocation());
+        }
     }
 
     @EventHandler
